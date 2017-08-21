@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2017-08-21 10:41:50">
+<sys_remote_update_set action="INSERT_OR_UPDATE">
+<application display_value="Global">global</application>
+<application_name>Global</application_name>
+<application_scope>global</application_scope>
+<application_version/>
+<collisions/>
+<commit_date/>
+<deleted/>
+<description>This contains some test data that can be used to test out the utility.</description>
+<inserted/>
+<name>SNStandardsFramework-Test-Data</name>
+<origin_sys_id/>
+<release_date/>
+<remote_sys_id>409d6144db340300d8ccd421cf9619b2</remote_sys_id>
+<state>loaded</state>
+<summary/>
+<sys_class_name>sys_remote_update_set</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2017-08-21 10:41:50</sys_created_on>
+<sys_id>b7a06d1cdb380300d8ccd421cf961941</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2017-08-21 10:41:50</sys_updated_on>
+<update_set display_value=""/>
+<update_source display_value=""/>
+<updated/>
+</sys_remote_update_set>
+<sys_update_xml action="INSERT_OR_UPDATE">
+<action>INSERT_OR_UPDATE</action>
+<application display_value="Global">global</application>
+<category>customer</category>
+<comments/>
+<name>u_sn_standards_148af4dcdbf40300d8ccd421cf961962</name>
+<payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update table="u_sn_standards"&gt;&lt;u_sn_standards action="INSERT_OR_UPDATE"&gt;&lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;&lt;sys_created_on&gt;2017-08-21 07:55:02&lt;/sys_created_on&gt;&lt;sys_id&gt;148af4dcdbf40300d8ccd421cf961962&lt;/sys_id&gt;&lt;sys_mod_count&gt;2&lt;/sys_mod_count&gt;&lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2017-08-21 10:36:57&lt;/sys_updated_on&gt;&lt;u_active&gt;true&lt;/u_active&gt;&lt;u_description&gt;This script is used to check and enforce the naming formats for different objects&lt;/u_description&gt;&lt;u_keyword/&gt;&lt;u_number&gt;SNS0001009&lt;/u_number&gt;&lt;u_order&gt;100&lt;/u_order&gt;&lt;u_script&gt;&lt;![CDATA[(function(){
+	//if(g_form.isNewRecord())
+	//{
+		var fields = g_form.getEditableFields();
+		if(fields.indexOf('name') &gt; -1)
+			{
+			
+			var errorMessage = 'Name Is Not In the Correct Format ';
+			var currentTableName = g_form.getTableName();
+			
+			var tablesData =
+			[
+			
+			{
+				tables:['sys_script_client'],
+				expectedFormat : 'Expected Name Format : &lt;Module Identifier/Service Identifier&gt;-&lt;Functionality of the object&gt;',
+				regex : /^([a-zA-Z-]{2,6})-[a-zA-Z0-9|-]{2,}[0-9]-([a-zA-Z_-]{3,})$/
+			},
+			
+			{
+				tables:['item_option_new'],
+				expectedFormat : 'Expected Name Format : u_&lt;ServiceName&gt;_&lt;Name of variable&gt;',
+				regex : /^(u_)[a-zA-Z]{2,}(_[a-zA-Z_]{3,})$/
+			}
+			
+			];
+			
+			for(i=0;i&lt;tablesData.length;i++)
+				{
+				if((tablesData[i].tables.indexOf(currentTableName)) &gt; -1)
+					{
+					if(!tablesData[i].regex.test(g_form.getValue('name')))
+						{
+						alert(errorMessage);
+						g_form.hideFieldMsg('name', true);
+						g_form.showFieldMsg('name',tablesData[i].expectedFormat,'info');
+						return false;
+					}
+				}
+				
+			}
+			
+		}
+		//}
+		return true;
+	})();]]&gt;&lt;/u_script&gt;&lt;u_script_type&gt;on_submit&lt;/u_script_type&gt;&lt;u_table&gt;sys_script_client&lt;/u_table&gt;&lt;u_type&gt;Script&lt;/u_type&gt;&lt;/u_sn_standards&gt;&lt;/record_update&gt;</payload>
+<remote_update_set display_value="SNStandardsFramework-Test-Data">b7a06d1cdb380300d8ccd421cf961941</remote_update_set>
+<replace_on_upgrade>false</replace_on_upgrade>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2017-08-21 10:41:50</sys_created_on>
+<sys_id>3ba06d1cdb380300d8ccd421cf961941</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2017-08-21 10:41:50</sys_updated_on>
+<table/>
+<target_name>SNS0001009</target_name>
+<type>SN Standards</type>
+<update_domain>global</update_domain>
+<update_set display_value=""/>
+<view/>
+</sys_update_xml>
+<sys_update_xml action="INSERT_OR_UPDATE">
+<action>INSERT_OR_UPDATE</action>
+<application display_value="Global">global</application>
+<category>customer</category>
+<comments/>
+<name>u_sn_standards_e5a974dcdbf40300d8ccd421cf9619f2</name>
+<payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update table="u_sn_standards"&gt;&lt;u_sn_standards action="INSERT_OR_UPDATE"&gt;&lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;&lt;sys_created_on&gt;2017-08-21 07:52:16&lt;/sys_created_on&gt;&lt;sys_id&gt;e5a974dcdbf40300d8ccd421cf9619f2&lt;/sys_id&gt;&lt;sys_mod_count&gt;0&lt;/sys_mod_count&gt;&lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2017-08-21 07:52:16&lt;/sys_updated_on&gt;&lt;u_active&gt;true&lt;/u_active&gt;&lt;u_description&gt;Found gel() statement&lt;/u_description&gt;&lt;u_keyword&gt;gel()&lt;/u_keyword&gt;&lt;u_number&gt;SNS0001005&lt;/u_number&gt;&lt;u_order&gt;100&lt;/u_order&gt;&lt;u_script&gt;&lt;![CDATA[(function(){
+try
+{
+	
+}
+catch(errObj)
+{
+	throw errObj;
+}
+})();]]&gt;&lt;/u_script&gt;&lt;u_script_type/&gt;&lt;u_table&gt;sys_script_client&lt;/u_table&gt;&lt;u_type&gt;Keyword&lt;/u_type&gt;&lt;/u_sn_standards&gt;&lt;/record_update&gt;</payload>
+<remote_update_set display_value="SNStandardsFramework-Test-Data">b7a06d1cdb380300d8ccd421cf961941</remote_update_set>
+<replace_on_upgrade>false</replace_on_upgrade>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2017-08-21 10:41:50</sys_created_on>
+<sys_id>3fa06d1cdb380300d8ccd421cf961941</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2017-08-21 10:41:50</sys_updated_on>
+<table/>
+<target_name>SNS0001005</target_name>
+<type>SN Standards</type>
+<update_domain>global</update_domain>
+<update_set display_value=""/>
+<view/>
+</sys_update_xml>
+<sys_update_xml action="INSERT_OR_UPDATE">
+<action>INSERT_OR_UPDATE</action>
+<application display_value="Global">global</application>
+<category>customer</category>
+<comments/>
+<name>u_sn_standards_1b5ab4dcdbf40300d8ccd421cf961901</name>
+<payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update table="u_sn_standards"&gt;&lt;u_sn_standards action="INSERT_OR_UPDATE"&gt;&lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;&lt;sys_created_on&gt;2017-08-21 07:54:25&lt;/sys_created_on&gt;&lt;sys_id&gt;1b5ab4dcdbf40300d8ccd421cf961901&lt;/sys_id&gt;&lt;sys_mod_count&gt;0&lt;/sys_mod_count&gt;&lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2017-08-21 07:54:25&lt;/sys_updated_on&gt;&lt;u_active&gt;true&lt;/u_active&gt;&lt;u_description&gt;This script is used to specify the naming format for different script as per the convention.&lt;/u_description&gt;&lt;u_keyword/&gt;&lt;u_number&gt;SNS0001008&lt;/u_number&gt;&lt;u_order&gt;100&lt;/u_order&gt;&lt;u_script&gt;&lt;![CDATA[(function(){
+	var fields = g_form.getEditableFields();
+	if(fields.indexOf('name') &gt; -1)
+		{
+		var currentTableName = g_form.getTableName();
+		
+		var tablesData =
+		[
+		
+		{
+			tables:['sys_script_client'],
+			expectedFormat : 'Expected Name Format : &lt;Module Identifier/Service Identifier&gt;-&lt;Functionality of the object&gt;'
+		},
+		
+		{
+			tables:['item_option_new'],
+			expectedFormat : 'Expected Name Format : u_&lt; ServiceName&gt;_&lt;Name of variable&gt;'
+		}
+		
+		];
+		
+		for(i=0;i&lt;tablesData.length;i++)
+			{
+			if((tablesData[i].tables.indexOf(currentTableName)) &gt; -1)
+				{
+				g_form.showFieldMsg('name',tablesData[i].expectedFormat,'info');
+			}
+			
+		}
+		
+	}
+})();]]&gt;&lt;/u_script&gt;&lt;u_script_type&gt;on_load&lt;/u_script_type&gt;&lt;u_table&gt;sys_script_client&lt;/u_table&gt;&lt;u_type&gt;Script&lt;/u_type&gt;&lt;/u_sn_standards&gt;&lt;/record_update&gt;</payload>
+<remote_update_set display_value="SNStandardsFramework-Test-Data">b7a06d1cdb380300d8ccd421cf961941</remote_update_set>
+<replace_on_upgrade>false</replace_on_upgrade>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2017-08-21 10:41:50</sys_created_on>
+<sys_id>7ba06d1cdb380300d8ccd421cf961941</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2017-08-21 10:41:50</sys_updated_on>
+<table/>
+<target_name>SNS0001008</target_name>
+<type>SN Standards</type>
+<update_domain>global</update_domain>
+<update_set display_value=""/>
+<view/>
+</sys_update_xml>
+<sys_update_xml action="INSERT_OR_UPDATE">
+<action>INSERT_OR_UPDATE</action>
+<application display_value="Global">global</application>
+<category>customer</category>
+<comments/>
+<name>u_sn_standards_202af4dcdbf40300d8ccd421cf961961</name>
+<payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update table="u_sn_standards"&gt;&lt;u_sn_standards action="INSERT_OR_UPDATE"&gt;&lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;&lt;sys_created_on&gt;2017-08-21 07:53:24&lt;/sys_created_on&gt;&lt;sys_id&gt;202af4dcdbf40300d8ccd421cf961961&lt;/sys_id&gt;&lt;sys_mod_count&gt;1&lt;/sys_mod_count&gt;&lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2017-08-21 10:37:50&lt;/sys_updated_on&gt;&lt;u_active&gt;true&lt;/u_active&gt;&lt;u_description&gt;SysId Found&lt;/u_description&gt;&lt;u_keyword&gt;/[0-9a-f]{32}/&lt;/u_keyword&gt;&lt;u_number&gt;SNS0001007&lt;/u_number&gt;&lt;u_order&gt;300&lt;/u_order&gt;&lt;u_script&gt;&lt;![CDATA[(function(){
+try
+{
+	
+}
+catch(errObj)
+{
+	throw errObj;
+}
+})();]]&gt;&lt;/u_script&gt;&lt;u_script_type/&gt;&lt;u_table&gt;sys_script_client&lt;/u_table&gt;&lt;u_type&gt;Pattern&lt;/u_type&gt;&lt;/u_sn_standards&gt;&lt;/record_update&gt;</payload>
+<remote_update_set display_value="SNStandardsFramework-Test-Data">b7a06d1cdb380300d8ccd421cf961941</remote_update_set>
+<replace_on_upgrade>false</replace_on_upgrade>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2017-08-21 10:41:50</sys_created_on>
+<sys_id>bba06d1cdb380300d8ccd421cf961941</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2017-08-21 10:41:50</sys_updated_on>
+<table/>
+<target_name>SNS0001007</target_name>
+<type>SN Standards</type>
+<update_domain>global</update_domain>
+<update_set display_value=""/>
+<view/>
+</sys_update_xml>
+<sys_update_xml action="INSERT_OR_UPDATE">
+<action>INSERT_OR_UPDATE</action>
+<application display_value="Global">global</application>
+<category>customer</category>
+<comments/>
+<name>u_sn_standards_dff9b4dcdbf40300d8ccd421cf9619d2</name>
+<payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update table="u_sn_standards"&gt;&lt;u_sn_standards action="INSERT_OR_UPDATE"&gt;&lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;&lt;sys_created_on&gt;2017-08-21 07:52:46&lt;/sys_created_on&gt;&lt;sys_id&gt;dff9b4dcdbf40300d8ccd421cf9619d2&lt;/sys_id&gt;&lt;sys_mod_count&gt;1&lt;/sys_mod_count&gt;&lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2017-08-21 07:55:16&lt;/sys_updated_on&gt;&lt;u_active&gt;true&lt;/u_active&gt;&lt;u_description&gt;Found document() statement&lt;/u_description&gt;&lt;u_keyword&gt;document.&lt;/u_keyword&gt;&lt;u_number&gt;SNS0001006&lt;/u_number&gt;&lt;u_order&gt;200&lt;/u_order&gt;&lt;u_script&gt;&lt;![CDATA[(function(){
+try
+{
+	
+}
+catch(errObj)
+{
+	throw errObj;
+}
+})();]]&gt;&lt;/u_script&gt;&lt;u_script_type/&gt;&lt;u_table&gt;sys_script_client&lt;/u_table&gt;&lt;u_type&gt;Keyword&lt;/u_type&gt;&lt;/u_sn_standards&gt;&lt;/record_update&gt;</payload>
+<remote_update_set display_value="SNStandardsFramework-Test-Data">b7a06d1cdb380300d8ccd421cf961941</remote_update_set>
+<replace_on_upgrade>false</replace_on_upgrade>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2017-08-21 10:41:50</sys_created_on>
+<sys_id>fba06d1cdb380300d8ccd421cf961941</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2017-08-21 10:41:50</sys_updated_on>
+<table/>
+<target_name>SNS0001006</target_name>
+<type>SN Standards</type>
+<update_domain>global</update_domain>
+<update_set display_value=""/>
+<view/>
+</sys_update_xml>
+</unload>
