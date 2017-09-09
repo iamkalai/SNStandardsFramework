@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<unload unload_date="2017-09-09 05:55:32">
+<sys_remote_update_set action="INSERT_OR_UPDATE">
+<application display_value="Global">global</application>
+<application_name>Global</application_name>
+<application_scope>global</application_scope>
+<application_version/>
+<collisions/>
+<commit_date/>
+<deleted/>
+<description>Correcting issue with executing multiple scripts on same table.</description>
+<inserted/>
+<name>SNStandardsFramework-V1.1</name>
+<origin_sys_id/>
+<release_date/>
+<remote_sys_id>b5159425db0d0300d8ccd421cf96199b</remote_sys_id>
+<state>loaded</state>
+<summary/>
+<sys_class_name>sys_remote_update_set</sys_class_name>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2017-09-09 05:55:32</sys_created_on>
+<sys_id>4f555ad2db094300d8ccd421cf96191a</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2017-09-09 05:55:32</sys_updated_on>
+<update_set display_value=""/>
+<update_source display_value=""/>
+<updated/>
+</sys_remote_update_set>
+<sys_update_xml action="INSERT_OR_UPDATE">
+<action>INSERT_OR_UPDATE</action>
+<application display_value="Global">global</application>
+<category>customer</category>
+<comments/>
+<name>sys_script_client_b9b333c5db4f3200d8ccd421cf9619ed</name>
+<payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update sys_domain="global" table="sys_script_client"&gt;&lt;sys_script_client action="INSERT_OR_UPDATE"&gt;&lt;active&gt;true&lt;/active&gt;&lt;applies_extended&gt;false&lt;/applies_extended&gt;&lt;condition/&gt;&lt;description&gt;This script is used to validate the standards on submit scripts.&lt;/description&gt;&lt;field&gt;sys_created_on&lt;/field&gt;&lt;global&gt;true&lt;/global&gt;&lt;messages/&gt;&lt;name&gt;SN_Standards_On_Submit&lt;/name&gt;&lt;order/&gt;&lt;script&gt;&lt;![CDATA[function onSubmit() {
+	
+	try
+	{
+		if(!bpSubmissionFlag) //If Accept button is already clicked, then skip running the script again.
+			{
+			return true;
+		}
+		
+		var tables = g_user.getClientData('SN_Standards_Validator_Tables');
+		//If there is nothing in preference, skip the porcessing.
+		if(tables == '')
+			{
+			return true;
+		}
+		
+		var currentTable = g_form.getTableName();
+		var tablesList = tables.split(',');
+		if(tablesList.indexOf(currentTable) == -1)
+			{
+			return true;
+		}
+	}
+	catch(errObj)
+	{
+		jslog('Error logged-'+errObj.toString());
+	}
+	
+	var scriptedFunction = (function(){
+		try
+		{
+			var getSubmitScript = new GlideAjax('SN_Standards_Validator');
+			getSubmitScript.addParam('sysparm_name', 'checkandEvaluateScript');
+			getSubmitScript.addParam('sysparm_table_name', g_form.getTableName());
+			getSubmitScript.addParam('sysparm_script_type', 'on_submit'); //fetch the global and table related scripts.
+			getSubmitScript.getXMLWait(); //wait for data from server
+			var returnObj = getSubmitScript.getAnswer();
+			if(!(returnObj==null || returnObj=='not_required' || returnObj=='error' || returnObj==''))
+				{
+				var scripts = JSON.parse(returnObj); //parse and execute the scripts.
+				var numberOfScripts = scripts.length;
+				for( var i=0 ; i &lt; numberOfScripts ; i++) {
+					if(!customEvaluator(scripts[i])) //stop processing rest of the script when first returns false
+						{
+						return false;
+					}
+				}
+			}
+			return true;
+		}
+		catch(errObj)
+		{
+			var logError = new GlideAjax('SN_Standards_Validator');
+			logError.addParam('sysparm_name', 'customErrorLogger'); //log the error to error logs.
+			logError.addParam('sysparm_message', errObj.toString());
+			logError.addParam('sysparm_source', 'SN_Standards_Error_Logger');
+			logError.addParam('sysparm_log_type', 'error');
+			logError.getXML(function(response) {
+				jslog('Error logged');
+			});
+			return true;
+		}
+	})();
+	
+	
+	try
+	{
+		if(scriptedFunction) //execute only if all the scripts pass from above.
+			{
+			var getKeywordResult = new GlideAjax('SN_Standards_Validator');
+			getKeywordResult.addParam('sysparm_name', 'checkandEvaluateKeyword'); //do the keyword relate script searches
+			getKeywordResult.addParam('sysparm_table_name', g_form.getTableName());
+			getKeywordResult.addParam('sysparm_script_content', g_form.getValue('script'));
+			getKeywordResult.getXMLWait();
+			var returnData = getKeywordResult.getAnswer();
+			if(returnData != "")
+				{
+				var dialog = new GlideDialogWindow("SN_standards_results_dialog"); //if any violation found, display the results.
+				dialog.setTitle("Standards Recommendations");
+				dialog.setPreference('standardsresults', returnData.toString()); //pass the result to display in page
+				dialog.render();
+				return false;
+			}
+			return true;
+		}
+		return false;
+	}
+	catch(errObj)
+	{
+		var logError = new GlideAjax('SN_Standards_Validator');
+		logError.addParam('sysparm_name', 'customErrorLogger');
+		logError.addParam('sysparm_message', errObj.toString());
+		logError.addParam('sysparm_source', 'SN_Standards_Error_Logger');
+		logError.addParam('sysparm_log_type', 'error');
+		logError.getXML(function(response) {
+			jslog('Error logged');
+		});
+		return true;
+	}
+	
+	//Added the custom function since the only the last script will be evaluated in the for-loop
+	function customEvaluator(script){
+		return eval(script); //Not evil since the data is passed by us.
+	}
+}]]&gt;&lt;/script&gt;&lt;sys_class_name&gt;sys_script_client&lt;/sys_class_name&gt;&lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;&lt;sys_created_on&gt;2017-05-29 05:30:36&lt;/sys_created_on&gt;&lt;sys_customer_update&gt;true&lt;/sys_customer_update&gt;&lt;sys_domain&gt;global&lt;/sys_domain&gt;&lt;sys_domain_path&gt;/&lt;/sys_domain_path&gt;&lt;sys_id&gt;b9b333c5db4f3200d8ccd421cf9619ed&lt;/sys_id&gt;&lt;sys_mod_count&gt;71&lt;/sys_mod_count&gt;&lt;sys_name&gt;SN_Standards_On_Submit&lt;/sys_name&gt;&lt;sys_overrides/&gt;&lt;sys_package display_value="Global" source="global"&gt;global&lt;/sys_package&gt;&lt;sys_policy/&gt;&lt;sys_replace_on_upgrade&gt;false&lt;/sys_replace_on_upgrade&gt;&lt;sys_scope display_value="Global"&gt;global&lt;/sys_scope&gt;&lt;sys_update_name&gt;sys_script_client_b9b333c5db4f3200d8ccd421cf9619ed&lt;/sys_update_name&gt;&lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2017-09-06 12:44:02&lt;/sys_updated_on&gt;&lt;table&gt;global&lt;/table&gt;&lt;type&gt;onSubmit&lt;/type&gt;&lt;ui_type&gt;0&lt;/ui_type&gt;&lt;view/&gt;&lt;/sys_script_client&gt;&lt;/record_update&gt;</payload>
+<remote_update_set display_value="SNStandardsFramework-V1.1">4f555ad2db094300d8ccd421cf96191a</remote_update_set>
+<replace_on_upgrade>false</replace_on_upgrade>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2017-09-09 05:55:32</sys_created_on>
+<sys_id>03555ad2db094300d8ccd421cf96191b</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2017-09-09 05:55:32</sys_updated_on>
+<table>global</table>
+<target_name>SN_Standards_On_Submit</target_name>
+<type>Client Script</type>
+<update_domain>global</update_domain>
+<update_set display_value=""/>
+<view/>
+</sys_update_xml>
+<sys_update_xml action="INSERT_OR_UPDATE">
+<action>INSERT_OR_UPDATE</action>
+<application display_value="Global">global</application>
+<category>customer</category>
+<comments/>
+<name>sys_script_client_db9e9751db36f200d5e15f6e5e961921</name>
+<payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update sys_domain="global" table="sys_script_client"&gt;&lt;sys_script_client action="INSERT_OR_UPDATE"&gt;&lt;active&gt;true&lt;/active&gt;&lt;applies_extended&gt;false&lt;/applies_extended&gt;&lt;condition/&gt;&lt;description&gt;This script is used to validate the standards on load scripts.&lt;/description&gt;&lt;field&gt;sys_created_on&lt;/field&gt;&lt;global&gt;true&lt;/global&gt;&lt;messages/&gt;&lt;name&gt;SN_Standards_On_Load&lt;/name&gt;&lt;order&gt;0&lt;/order&gt;&lt;script&gt;&lt;![CDATA[var bpSubmissionFlag = true; //This flag is used to block the onsubmit script from running twice.
+
+function onLoad() {
+	var currentTable = g_form.getTableName();
+	
+	//This checks the list of table that needs to be validated
+	//This gets set using a script action on user session creation.
+	
+	//Skip the check if table not found in preference.
+	try
+	{
+		var tables = g_user.getClientData('SN_Standards_Validator_Tables');
+		//If there is nothing in preference, skip the porcessing.
+		if(!tables)
+			{
+			var getValidatorTables = new GlideAjax('SN_Standards_Validator');
+			getValidatorTables.addParam('sysparm_name', 'getStandardsValidatorTables');
+			getValidatorTables.getXMLWait(); //wait for data from server
+			if(!(getValidatorTables.getAnswer()))
+				return true;
+		}
+		
+		var tablesList = tables.split(',');
+		if(tablesList.indexOf(currentTable) == -1)
+			{
+			return true;
+		}
+	}
+	catch(errObj)
+	{
+		jslog('Error logged-'+errObj.toString());
+	}
+	
+	try
+	{
+		var getLoadScript = new GlideAjax('SN_Standards_Validator');
+		getLoadScript.addParam('sysparm_name', 'checkandEvaluateScript');
+		getLoadScript.addParam('sysparm_table_name', currentTable);
+		getLoadScript.addParam('sysparm_script_type', 'on_load'); //get all the global and table specific onload script
+		getLoadScript.getXMLAnswer(function(answer){
+			if(!(answer==null || answer=='not_required' || answer=='error' || answer==''))
+				{
+				var scripts = JSON.parse(answer); //parse and execute the scripts from server
+				var numberOfScripts = scripts.length;
+				for( var i=0 ; i &lt; numberOfScripts ; i++) {
+					customEvaluator(scripts[i]);
+				}
+			}
+		});
+	}
+	catch(errObj)
+	{
+		var logError = new GlideAjax('SN_Standards_Validator');
+		logError.addParam('sysparm_name', 'customErrorLogger'); //Log the error to error log and console
+		logError.addParam('sysparm_message', errObj.toString());
+		logError.addParam('sysparm_source', 'SN_Standards_Error_Logger');
+		logError.addParam('sysparm_log_type', 'error');
+		logError.getXML(function(response) {
+			jslog('Error logged');
+		});
+	}
+	
+	//Added the custom function since the only the last script will be evaluated in the for-loop
+	function customEvaluator(script){
+		return eval(script); //Not evil since the data is passed by us.
+	}
+	
+}]]&gt;&lt;/script&gt;&lt;sys_class_name&gt;sys_script_client&lt;/sys_class_name&gt;&lt;sys_created_by&gt;KPUSHPAN&lt;/sys_created_by&gt;&lt;sys_created_on&gt;2017-05-17 12:25:45&lt;/sys_created_on&gt;&lt;sys_customer_update&gt;true&lt;/sys_customer_update&gt;&lt;sys_domain&gt;global&lt;/sys_domain&gt;&lt;sys_domain_path&gt;/&lt;/sys_domain_path&gt;&lt;sys_id&gt;db9e9751db36f200d5e15f6e5e961921&lt;/sys_id&gt;&lt;sys_mod_count&gt;52&lt;/sys_mod_count&gt;&lt;sys_name&gt;SN_Standards_On_Load&lt;/sys_name&gt;&lt;sys_overrides/&gt;&lt;sys_package display_value="Global" source="global"&gt;global&lt;/sys_package&gt;&lt;sys_policy/&gt;&lt;sys_replace_on_upgrade&gt;false&lt;/sys_replace_on_upgrade&gt;&lt;sys_scope display_value="Global"&gt;global&lt;/sys_scope&gt;&lt;sys_update_name&gt;sys_script_client_db9e9751db36f200d5e15f6e5e961921&lt;/sys_update_name&gt;&lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2017-09-06 12:45:56&lt;/sys_updated_on&gt;&lt;table&gt;global&lt;/table&gt;&lt;type&gt;onLoad&lt;/type&gt;&lt;ui_type&gt;0&lt;/ui_type&gt;&lt;view/&gt;&lt;/sys_script_client&gt;&lt;/record_update&gt;</payload>
+<remote_update_set display_value="SNStandardsFramework-V1.1">4f555ad2db094300d8ccd421cf96191a</remote_update_set>
+<replace_on_upgrade>false</replace_on_upgrade>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2017-09-09 05:55:32</sys_created_on>
+<sys_id>43555ad2db094300d8ccd421cf96191b</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2017-09-09 05:55:32</sys_updated_on>
+<table>global</table>
+<target_name>SN_Standards_On_Load</target_name>
+<type>Client Script</type>
+<update_domain>global</update_domain>
+<update_set display_value=""/>
+<view/>
+</sys_update_xml>
+<sys_update_xml action="INSERT_OR_UPDATE">
+<action>INSERT_OR_UPDATE</action>
+<application display_value="Global">global</application>
+<category>customer</category>
+<comments/>
+<name>sys_dictionary_u_sn_standards_u_script</name>
+<payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update&gt;&lt;sys_dictionary action="INSERT_OR_UPDATE" element="u_script" table="u_sn_standards"&gt;&lt;active&gt;true&lt;/active&gt;&lt;array&gt;false&lt;/array&gt;&lt;attributes/&gt;&lt;audit&gt;false&lt;/audit&gt;&lt;calculation&gt;&lt;![CDATA[(function calculatedFieldValue(current) {
+
+	// Add your code here
+	return '';  // return the calculated value
+
+})(current);]]&gt;&lt;/calculation&gt;&lt;choice/&gt;&lt;choice_field/&gt;&lt;choice_table/&gt;&lt;column_label&gt;Script&lt;/column_label&gt;&lt;comments/&gt;&lt;create_roles/&gt;&lt;default_value&gt;(function(){&amp;#13;
+	try&amp;#13;
+	{&amp;#13;
+		&amp;#13;
+	}&amp;#13;
+	catch(errObj)&amp;#13;
+	{&amp;#13;
+		var logError = new GlideAjax('SN_Standards_Validator');&amp;#13;
+		logError.addParam('sysparm_name', 'customErrorLogger');&amp;#13;
+		logError.addParam('sysparm_message', errObj.toString());&amp;#13;
+		logError.addParam('sysparm_source', 'SN_Standards_Error_Logger');&amp;#13;
+		logError.addParam('sysparm_log_type', 'error');&amp;#13;
+		logError.getXML(function(response) {&amp;#13;
+			jslog('Error logged');&amp;#13;
+		});&amp;#13;
+		return true;&amp;#13;
+	}&amp;#13;
+})();&lt;/default_value&gt;&lt;defaultsort/&gt;&lt;delete_roles/&gt;&lt;dependent/&gt;&lt;dependent_on_field/&gt;&lt;display&gt;false&lt;/display&gt;&lt;dynamic_creation&gt;false&lt;/dynamic_creation&gt;&lt;dynamic_creation_script/&gt;&lt;dynamic_default_value/&gt;&lt;dynamic_ref_qual/&gt;&lt;element&gt;u_script&lt;/element&gt;&lt;element_reference&gt;false&lt;/element_reference&gt;&lt;foreign_database/&gt;&lt;internal_type display_value="Script"&gt;script&lt;/internal_type&gt;&lt;mandatory&gt;false&lt;/mandatory&gt;&lt;max_length&gt;8000&lt;/max_length&gt;&lt;name&gt;u_sn_standards&lt;/name&gt;&lt;next_element/&gt;&lt;primary&gt;false&lt;/primary&gt;&lt;read_only&gt;false&lt;/read_only&gt;&lt;read_roles/&gt;&lt;reference/&gt;&lt;reference_cascade_rule/&gt;&lt;reference_floats&gt;false&lt;/reference_floats&gt;&lt;reference_key/&gt;&lt;reference_qual/&gt;&lt;reference_qual_condition/&gt;&lt;reference_type/&gt;&lt;sizeclass/&gt;&lt;spell_check&gt;false&lt;/spell_check&gt;&lt;staged&gt;false&lt;/staged&gt;&lt;sys_class_name&gt;sys_dictionary&lt;/sys_class_name&gt;&lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;&lt;sys_created_on&gt;2017-08-21 07:08:54&lt;/sys_created_on&gt;&lt;sys_customer_update&gt;true&lt;/sys_customer_update&gt;&lt;sys_id&gt;7f5fa458dbf40300d8ccd421cf9619fd&lt;/sys_id&gt;&lt;sys_mod_count&gt;2&lt;/sys_mod_count&gt;&lt;sys_name&gt;Script&lt;/sys_name&gt;&lt;sys_package display_value="Global" source="global"&gt;global&lt;/sys_package&gt;&lt;sys_policy/&gt;&lt;sys_replace_on_upgrade&gt;false&lt;/sys_replace_on_upgrade&gt;&lt;sys_scope display_value="Global"&gt;global&lt;/sys_scope&gt;&lt;sys_update_name&gt;sys_dictionary_u_sn_standards_u_script&lt;/sys_update_name&gt;&lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2017-09-09 05:54:57&lt;/sys_updated_on&gt;&lt;table_reference&gt;false&lt;/table_reference&gt;&lt;text_index&gt;false&lt;/text_index&gt;&lt;unique&gt;false&lt;/unique&gt;&lt;use_dependent_field&gt;false&lt;/use_dependent_field&gt;&lt;use_dynamic_default&gt;false&lt;/use_dynamic_default&gt;&lt;use_reference_qualifier&gt;simple&lt;/use_reference_qualifier&gt;&lt;virtual&gt;false&lt;/virtual&gt;&lt;widget/&gt;&lt;write_roles/&gt;&lt;xml_view&gt;false&lt;/xml_view&gt;&lt;/sys_dictionary&gt;&lt;/record_update&gt;</payload>
+<remote_update_set display_value="SNStandardsFramework-V1.1">4f555ad2db094300d8ccd421cf96191a</remote_update_set>
+<replace_on_upgrade>false</replace_on_upgrade>
+<sys_created_by>admin</sys_created_by>
+<sys_created_on>2017-09-09 05:55:32</sys_created_on>
+<sys_id>cf555ad2db094300d8ccd421cf96191a</sys_id>
+<sys_mod_count>0</sys_mod_count>
+<sys_updated_by>admin</sys_updated_by>
+<sys_updated_on>2017-09-09 05:55:32</sys_updated_on>
+<table>u_sn_standards</table>
+<target_name>SN Standards.Script</target_name>
+<type>Dictionary</type>
+<update_domain>global</update_domain>
+<update_set display_value=""/>
+<view/>
+</sys_update_xml>
+</unload>

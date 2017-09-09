@@ -18,6 +18,8 @@ This application/framework is an attempt to reduce such risks and can be used by
 
 *Install the updatesets found in dist folder* - SNStandardsFramework-V1.0 updateset creates the application and all the needed components in the instance. All the components that are being created are new and do not change any out of the box settings.
 
+After installing the first updateset, install SNStandardsFramework-V1.1 as it contains bug fixes to allow execution of multiple scripts defined on the same script.
+
 You can optionally, install the SNStandardsFramework-Test-Data updateset as well, to get some test constraints added to the system and you can use that for reference.
 
 **Usage:**
