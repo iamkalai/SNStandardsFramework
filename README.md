@@ -27,7 +27,7 @@ You can optionally, install the SNStandardsFramework-Test-Data updateset as well
 
 **Note:** ***This is meant to be only used for development environment*** and do not install it on Production as the framework is still in development stage and some of the things built as part of this might show up on ACE report.
 
-Once you have installed the application, you can access from the left navigation as 'ServiceNow Best Practices' application. Use the 'All' module to view all test data if you have also used the test-data update set. 
+Once you have installed the application, you can access from the left navigation as 'SN Standards' application. Use the 'All' module to view all test data if you have also used the test-data update set. 
 
 Since the framework basically uses 2 global scripts to run the entire thing, I have added some constraints that will make sure that those doesn't run for all the tables. The flipside of this would be, you will need to update the property *SN_Standards_Validator_Tables* that gets installed with the updateset and add table names manually if you are adding constraints for a newer table.
 
